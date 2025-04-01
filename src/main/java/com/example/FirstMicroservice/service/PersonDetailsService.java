@@ -23,11 +23,16 @@ public class PersonDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<PersonDTO> personDTO = personService.getPersonDTO(username);
+        Optional<PersonDTO> personDTO;
+        try {
+            personDTO = personService.getPersonDTO(username);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         if (personDTO.isEmpty()) {
             throw new UsernameNotFoundException("Пользователь не найден");
         } else {
             return new PersonDetails(personDTO.get());
         }
-    }
+    } // тут поток новый надо создать
 }

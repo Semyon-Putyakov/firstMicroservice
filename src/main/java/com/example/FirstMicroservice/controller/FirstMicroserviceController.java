@@ -1,5 +1,8 @@
 package com.example.FirstMicroservice.controller;
 
+import com.example.FirstMicroservice.security.PersonDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,11 @@ public class FirstMicroserviceController {
     public String login() {
         return "auth/login";
     }
+    // берем от сюда все это дело или не отсюда
+//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+//    personDetails.getPerson();
+    // или не отсюда крч завтра решу и надо будет #fields error сделать валидацию крч
 
     //POST реализация логина с рестом и кафкой
 

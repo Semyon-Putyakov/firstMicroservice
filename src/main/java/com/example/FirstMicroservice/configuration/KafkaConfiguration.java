@@ -64,19 +64,9 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public ConcurrentMessageListenerContainer<String, PersonDTO> replyContainer(
-            ConsumerFactory<String, PersonDTO> consumerFactory) {
-
-        ContainerProperties containerProperties = new ContainerProperties("topic2_reply");
-        containerProperties.setGroupId("group1");
-
-        return new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
-    }
-
-    @Bean
-    public ReplyingKafkaTemplate<String, PersonDTO, PersonDTO> replyingKafkaTemplate(
-            ProducerFactory<String, PersonDTO> pf,
-            ConcurrentMessageListenerContainer<String, PersonDTO> repliesContainer) {
-        return new ReplyingKafkaTemplate<>(pf, repliesContainer);
+    public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String, PersonDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        return factory;
     }
 }
