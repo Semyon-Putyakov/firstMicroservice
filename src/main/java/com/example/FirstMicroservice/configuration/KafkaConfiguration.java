@@ -1,0 +1,82 @@
+package com.example.FirstMicroservice.configuration;
+
+
+
+import com.example.FirstMicroservice.dto.PersonDTO;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerContainerFactory;
+import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Configuration
+public class KafkaConfiguration {
+
+    private String bootstrapServers = "localhost:9092";
+
+    @Bean
+    public Map<String, Object> producerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return props;
+    }
+
+    @Bean
+    public DefaultKafkaProducerFactory<String, PersonDTO> producerFactory(){
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    @Bean
+    public KafkaTemplate<String, PersonDTO> kafkaTemplate(){
+        return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public Map<String, Object> consumerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        return props;
+    }
+
+    @Bean
+    public ConsumerFactory<String,PersonDTO> consumerFactory(){
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfigs(),
+                new StringDeserializer(),
+                new JsonDeserializer<>(PersonDTO.class)
+        );
+    }
+
+    @Bean
+    public ConcurrentMessageListenerContainer<String, PersonDTO> replyContainer(
+            ConsumerFactory<String, PersonDTO> consumerFactory) {
+
+        ContainerProperties containerProperties = new ContainerProperties("topic2_reply");
+        containerProperties.setGroupId("group1");
+
+        return new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
+    }
+
+    @Bean
+    public ReplyingKafkaTemplate<String, PersonDTO, PersonDTO> replyingKafkaTemplate(
+            ProducerFactory<String, PersonDTO> pf,
+            ConcurrentMessageListenerContainer<String, PersonDTO> repliesContainer) {
+        return new ReplyingKafkaTemplate<>(pf, repliesContainer);
+    }
+}
