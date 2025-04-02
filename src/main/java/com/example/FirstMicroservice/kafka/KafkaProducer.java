@@ -17,7 +17,7 @@ public class KafkaProducer {
     }
 
     public void send(ProducerRecord<String, PersonDTO> record) {
-        kafkaTemplate.send("topic_request", record.key(), record.value());
+        kafkaTemplate.send(record.topic(), record.key(), record.value());
     }
 
 

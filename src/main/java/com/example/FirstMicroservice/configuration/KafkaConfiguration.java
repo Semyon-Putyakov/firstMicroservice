@@ -53,11 +53,14 @@ public class KafkaConfiguration {
 
     @Bean
     public ConsumerFactory<String, PersonDTO> consumerFactory() {
+        Map<String, Object> props = consumerConfigs();
         JsonDeserializer<PersonDTO> deserializer = new JsonDeserializer<>(PersonDTO.class);
-        deserializer.addTrustedPackages("*");
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("com.example.*"); // Разрешаем десериализацию из обоих пакетов
+        deserializer.setUseTypeMapperForKey(true);
 
         return new DefaultKafkaConsumerFactory<>(
-                consumerConfigs(),
+                props,
                 new StringDeserializer(),
                 deserializer
         );

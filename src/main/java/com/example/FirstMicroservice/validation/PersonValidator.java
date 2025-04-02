@@ -27,17 +27,16 @@ public class PersonValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-
-        PersonDTO personDTO = (PersonDTO) target;
+        PersonDTO validatedPerson = (PersonDTO) target;
 
         try {
-            Optional<PersonDTO> person = personService.getPersonDTO(personDTO.getUsername());
+            PersonDTO personResponse = personService.getPersonDTO(validatedPerson.getUsername()).orElse(null);
+            if (personResponse != null) {
+                errors.rejectValue("username", "Такой пользователь уже существует");
+            }
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
-
-        if(personDTO.getUsername() != null){
-            errors.rejectValue("username", "Такой пользователь уже существует");
         }
 
     }

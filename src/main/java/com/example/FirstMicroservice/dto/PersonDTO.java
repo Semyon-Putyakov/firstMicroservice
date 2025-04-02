@@ -59,8 +59,13 @@ public class PersonDTO {
             return new PersonDTO(username, password);
         }
 
-
-
     }
 
+    @Override
+    public String toString() {
+        return "PersonDTO{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

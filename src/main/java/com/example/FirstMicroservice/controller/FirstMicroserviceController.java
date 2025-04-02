@@ -33,15 +33,15 @@ public class FirstMicroserviceController {
     @PostMapping("/registration")
     public String putPerson(@ModelAttribute("person") @Valid PersonDTO personDTO, BindingResult bindingResult) {
 
-        System.out.println(personDTO);
-
         personValidator.validate(personDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "auth/registration";
         }
+
+        System.out.println("after create");
         personService.createPersonDTO(personDTO);
-        return "auth/registration";
+        return "auth/registration"; // return login
     }
 
     @GetMapping("/login")
