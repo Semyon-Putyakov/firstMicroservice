@@ -36,9 +36,12 @@ public class PersonDTO {
     }
 
     public static class PersonDTOBuilder{
+
         @NotEmpty(message = "Пустой логин")
         @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
         private String username;
+
+
         @NotEmpty(message = "Пустой пароль")
         @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
         private String password;

@@ -34,5 +34,7 @@ public class PersonDetailsService implements UserDetailsService {
         } else {
             return new PersonDetails(personDTO.get());
         }
+
+        // тут тоже поправить надо
     } // тут поток новый надо создать
 }

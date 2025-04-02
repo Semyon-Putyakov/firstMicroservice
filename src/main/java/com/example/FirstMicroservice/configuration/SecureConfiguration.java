@@ -35,7 +35,7 @@ public class SecureConfiguration {
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
                 .defaultSuccessUrl("/auth/user", true)
-                .failureUrl("/auth/login?error") // как сделать с bidingResult
+                .failureUrl("/auth/login?error")
                 .and()
                 .logout()
                 .logoutUrl("/logout")

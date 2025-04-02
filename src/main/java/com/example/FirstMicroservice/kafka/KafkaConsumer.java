@@ -13,14 +13,14 @@ import java.util.concurrent.BlockingQueue;
 @Service
 public class KafkaConsumer {
 
-    private BlockingQueue<PersonDTO> queue = new ArrayBlockingQueue<>(1);
+    private BlockingQueue<ConsumerRecord<String, PersonDTO>> queue = new ArrayBlockingQueue<>(1);
 
-    @KafkaListener(topics = "topic_response") // создает свой поток
+    @KafkaListener(topics = "topic_response", groupId = "response") // создает свой поток
     public void listen(ConsumerRecord<String, PersonDTO> record) {
-        queue.offer(record.value());
+        queue.offer(record);
     }
 
-    public PersonDTO getQueue() throws InterruptedException {
+    public ConsumerRecord<String, PersonDTO> getQueue() throws InterruptedException {
         return queue.take();
     }
 

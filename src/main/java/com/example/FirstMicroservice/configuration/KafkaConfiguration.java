@@ -12,9 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
-import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
@@ -55,14 +52,16 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public ConsumerFactory<String,PersonDTO> consumerFactory(){
+    public ConsumerFactory<String, PersonDTO> consumerFactory() {
+        JsonDeserializer<PersonDTO> deserializer = new JsonDeserializer<>(PersonDTO.class);
+        deserializer.addTrustedPackages("*");
+
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
                 new StringDeserializer(),
-                new JsonDeserializer<>(PersonDTO.class)
+                deserializer
         );
     }
-
     @Bean
     public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(){
         ConcurrentKafkaListenerContainerFactory<String, PersonDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
