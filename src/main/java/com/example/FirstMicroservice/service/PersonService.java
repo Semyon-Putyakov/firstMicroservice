@@ -49,7 +49,6 @@ public class PersonService {
     }
 
     public void createPersonDTO(PersonDTO personDTO) {
-        System.out.println("create:" + personDTO.toString());
 
         personDTO.setPassword(passwordEncoding.encode(personDTO.getPassword()));
 
@@ -57,8 +56,6 @@ public class PersonService {
 
         ProducerRecord<String,PersonDTO> record = 
                 new ProducerRecord<>("topic_request", key, personDTO);
-        System.out.println("create:" + record.value().toString());
-        System.out.println("before send");
         kafkaProducer.send(record);
     }
 }

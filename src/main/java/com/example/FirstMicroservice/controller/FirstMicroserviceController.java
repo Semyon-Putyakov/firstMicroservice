@@ -41,7 +41,7 @@ public class FirstMicroserviceController {
 
         System.out.println("after create");
         personService.createPersonDTO(personDTO);
-        return "auth/registration"; // return login
+        return "auth/login";
     }
 
     @GetMapping("/login")
