@@ -12,9 +12,21 @@ public class PersonDTO {
     @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
     private String password;
 
-    public PersonDTO() {}
+    private int id;
 
-    public PersonDTO(String username, String password) {
+    public PersonDTO() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public PersonDTO(String username, String password, int id) {
+        this.id = id;
         this.username = username;
         this.password = password;
     }
@@ -35,7 +47,7 @@ public class PersonDTO {
         this.password = password;
     }
 
-    public static class PersonDTOBuilder{
+    public static class PersonDTOBuilder {
 
         @NotEmpty(message = "Пустой логин")
         @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
@@ -46,17 +58,25 @@ public class PersonDTO {
         @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
         private String password;
 
+        private int id;
+
         public PersonDTOBuilder setUsername(String username) {
             this.username = username;
             return this;
         }
+
         public PersonDTOBuilder setPassword(String password) {
             this.password = password;
             return this;
         }
 
+        public PersonDTOBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
         public PersonDTO build() {
-            return new PersonDTO(username, password);
+            return new PersonDTO(username, password, id);
         }
 
     }
@@ -66,6 +86,7 @@ public class PersonDTO {
         return "PersonDTO{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", id=" + id +
                 '}';
     }
 }

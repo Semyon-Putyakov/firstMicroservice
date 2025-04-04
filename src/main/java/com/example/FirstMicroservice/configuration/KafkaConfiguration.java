@@ -1,7 +1,5 @@
 package com.example.FirstMicroservice.configuration;
 
-
-
 import com.example.FirstMicroservice.dto.PersonDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -33,12 +31,12 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public DefaultKafkaProducerFactory<String, PersonDTO> producerFactory(){
+    public DefaultKafkaProducerFactory<String, PersonDTO> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, PersonDTO> kafkaTemplate(){
+    public KafkaTemplate<String, PersonDTO> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
@@ -56,7 +54,7 @@ public class KafkaConfiguration {
         Map<String, Object> props = consumerConfigs();
         JsonDeserializer<PersonDTO> deserializer = new JsonDeserializer<>(PersonDTO.class);
         deserializer.setRemoveTypeHeaders(false);
-        deserializer.addTrustedPackages("com.example.*"); // Разрешаем десериализацию из обоих пакетов
+        deserializer.addTrustedPackages("com.example.*");
         deserializer.setUseTypeMapperForKey(true);
 
         return new DefaultKafkaConsumerFactory<>(
@@ -65,8 +63,9 @@ public class KafkaConfiguration {
                 deserializer
         );
     }
+
     @Bean
-    public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(){
+    public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, PersonDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

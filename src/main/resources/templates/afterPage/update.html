@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form th:action="@{/auth/update}" th:method="PATCH" th:object="${person}">
+
+    <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
+
+    <label for="username">Введите новый логин:</label>
+    <input type="text" th:field="*{username}" id="username">
+    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" />
+
+    <br/>
+    <input type="submit" value="Изменить">
+</form>
+
+</body>
+</html>

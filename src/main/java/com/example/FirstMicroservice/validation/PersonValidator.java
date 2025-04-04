@@ -29,15 +29,9 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         PersonDTO validatedPerson = (PersonDTO) target;
 
-        try {
-            PersonDTO personResponse = personService.getPersonDTO(validatedPerson.getUsername()).orElse(null);
-            if (personResponse != null) {
-                errors.rejectValue("username", "Такой пользователь уже существует");
-            }
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        PersonDTO personResponse = personService.getPersonDTO(validatedPerson.getUsername()).orElse(null);
+        if (personResponse != null) {
+            errors.rejectValue("username", "Такой пользователь уже существует");
         }
-
     }
 }

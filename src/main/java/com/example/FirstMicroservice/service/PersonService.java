@@ -6,10 +6,7 @@ import com.example.FirstMicroservice.kafka.KafkaProducer;
 import com.example.FirstMicroservice.util.PasswordEncoding;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,7 +15,7 @@ import java.util.Optional;
 public class PersonService {
     private final KafkaConsumer kafkaConsumer;
     private final KafkaProducer kafkaProducer;
-    private PasswordEncoding passwordEncoding;
+
 
     @Autowired
     public PersonService(KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer) {
@@ -26,36 +23,65 @@ public class PersonService {
         this.kafkaProducer = kafkaProducer;
     }
 
-    public Optional<PersonDTO> getPersonDTO(String username) throws InterruptedException {
-
+    public Optional<PersonDTO> getPersonDTO(String username) {
         PersonDTO personDTO = new PersonDTO.PersonDTOBuilder()
                 .setUsername(username)
                 .build();
-
         String key = "getPersonByUsername_" + username;
-        
-        ProducerRecord<String, PersonDTO> producerRecord =
-                new ProducerRecord<>("topic_request",key,personDTO);
-
-        kafkaProducer.send(producerRecord);
-
-        ConsumerRecord<String, PersonDTO> record = kafkaConsumer.getQueue();
-
-
+        producerRecord(key, personDTO);
+        ConsumerRecord<String, PersonDTO> record = consumerRecord();
         if (key.equals(record.key())) {
-            return Optional.of(record.value());
+            return Optional.ofNullable(record.value());
+        }
+        return Optional.empty();
+    }
+
+    public Optional<PersonDTO> getPersonById(int id) {
+        PersonDTO personDTO = new PersonDTO.PersonDTOBuilder()
+                .setId(id)
+                .build();
+        String key = "getPersonById_" + id;
+        producerRecord(key, personDTO);
+        ConsumerRecord<String, PersonDTO> record = consumerRecord();
+        if (key.equals(record.key())) {
+            return Optional.ofNullable(record.value());
         }
         return Optional.empty();
     }
 
     public void createPersonDTO(PersonDTO personDTO) {
-
-        personDTO.setPassword(passwordEncoding.encode(personDTO.getPassword()));
-
+        personDTO.setPassword(PasswordEncoding.encode(personDTO.getPassword()));
         String key = "createPerson_" + personDTO.getUsername();
-
-        ProducerRecord<String,PersonDTO> record = 
+        ProducerRecord<String, PersonDTO> record =
                 new ProducerRecord<>("topic_request", key, personDTO);
         kafkaProducer.send(record);
+    }
+
+    public void updatePersonDTO(PersonDTO personDTO) {
+
+        System.out.println("update " + personDTO);
+
+        String key = "updatePerson_" + personDTO.getUsername();
+
+        System.out.println("key " + key);
+
+
+        ProducerRecord<String, PersonDTO> record =
+                new ProducerRecord<>("topic_request", key, personDTO);
+        kafkaProducer.send(record);
+    }
+
+    private void producerRecord(String key, PersonDTO personDTO) {
+        ProducerRecord<String, PersonDTO> producerRecord =
+                new ProducerRecord<>("topic_request", key, personDTO);
+        kafkaProducer.send(producerRecord);
+    }
+
+    private ConsumerRecord<String, PersonDTO> consumerRecord() {
+        try {
+            return kafkaConsumer.getQueue();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
