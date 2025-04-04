@@ -27,7 +27,6 @@ public class PersonDetailsService implements UserDetailsService {
         if (personDTO.isEmpty()) {
             throw new UsernameNotFoundException("Пользователь не найден");
         } else {
-            System.out.println(personDTO.get());
             return new PersonDetails(personDTO.get());
         }
 

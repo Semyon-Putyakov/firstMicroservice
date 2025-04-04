@@ -1,10 +1,12 @@
 package com.example.FirstMicroservice.controller;
 
 import com.example.FirstMicroservice.dto.PersonDTO;
+import com.example.FirstMicroservice.model.PersonModel;
 import com.example.FirstMicroservice.security.PersonDetails;
 import com.example.FirstMicroservice.service.PersonService;
 import com.example.FirstMicroservice.validation.PersonValidator;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,25 +21,27 @@ public class FirstMicroserviceController {
 
     private final PersonService personService;
     private final PersonValidator personValidator;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public FirstMicroserviceController(PersonService personService, PersonValidator personValidator) {
+    public FirstMicroserviceController(PersonService personService, PersonValidator personValidator, ModelMapper modelMapper) {
         this.personService = personService;
         this.personValidator = personValidator;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/registration")
-    public String registration(@ModelAttribute("person") PersonDTO personDTO) {
-
+    public String registration(@ModelAttribute("person") PersonModel personModel) {
         return "auth/registration";
     }
 
     @PostMapping("/registration")
-    public String putPerson(@ModelAttribute("person") @Valid PersonDTO personDTO, BindingResult bindingResult) {
-        personValidator.validate(personDTO, bindingResult);
+    public String putPerson(@ModelAttribute("person") @Valid PersonModel personModel, BindingResult bindingResult) {
+        personValidator.validate(personModel, bindingResult);
         if (bindingResult.hasErrors()) {
             return "auth/registration";
         }
+        PersonDTO personDTO = modelMapper.map(personModel, PersonDTO.class);
         personService.createPersonDTO(personDTO);
         return "auth/login";
     }
@@ -59,32 +63,29 @@ public class FirstMicroserviceController {
 
     @DeleteMapping("/delete")
     public String delete(@ModelAttribute("person") PersonDTO personDTO) {
-        System.out.println(personDTO.toString());
         return "redirect:/auth/login";
     }
 
     @GetMapping("/update/{id}")
     public String update(Model model, @PathVariable("id") int id) {
-        PersonDTO personDTO =  personService.getPersonById(id).orElse(null);
-        System.out.println(personDTO.toString());
-        model.addAttribute("person", personDTO);
+        PersonDTO personDTO = personService.getPersonById(id).orElse(null);
+        PersonModel personModel = modelMapper.map(personDTO, PersonModel.class);
+        System.out.println("get " + personModel);
+        model.addAttribute("person", personModel);
         return "afterPage/update";
     }
 
     @PatchMapping("/update")
-    public String update(@ModelAttribute("person") @Valid PersonDTO personDTO, BindingResult bindingResult) {
-
-        System.out.println("persondto: " + personDTO.toString());
-
-        personValidator.validate(personDTO, bindingResult);
-        System.out.println("valid");
+    public String update(@ModelAttribute("person") @Valid PersonModel personModel, BindingResult bindingResult) {
+        personValidator.validate(personModel, bindingResult);
+        System.out.println(personModel);
         if (bindingResult.hasErrors()) {
             System.out.println("if");
             return "afterPage/update";
         }
-        System.out.println("method");
+        PersonDTO personDTO = modelMapper.map(personModel, PersonDTO.class);
+        System.out.println("personDTO: " + personDTO.toString());
         personService.updatePersonDTO(personDTO);
-        System.out.println("updated person");
         return "redirect:/auth/login";
     }
 }
