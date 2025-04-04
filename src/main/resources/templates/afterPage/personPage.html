@@ -5,11 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<h1>
-    Person page
-</h1>
 <div>
-
     <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
 
     <div th:object="${person}">
@@ -19,6 +15,13 @@
     <form th:action="@{/auth/update/{id} (id=${person.getId()})}">
         <input type="submit" value="Изменить пользователя">
         <input type="hidden" th:value="${person.username}">
+    </form>
+
+    <form th:method="DELETE" th:action="@{/auth/delete}" th:object="${person}">
+        <input type="submit" value="Удалить пользователя">
+        <input type="hidden" th:field="*{password}">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{username}">
     </form>
 
     <form th:action="@{/logout}" th:method="POST">

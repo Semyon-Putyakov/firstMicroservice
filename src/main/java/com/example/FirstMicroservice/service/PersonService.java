@@ -52,23 +52,22 @@ public class PersonService {
     public void createPersonDTO(PersonDTO personDTO) {
         personDTO.setPassword(PasswordEncoding.encode(personDTO.getPassword()));
         String key = "createPerson_" + personDTO.getUsername();
-        ProducerRecord<String, PersonDTO> record =
-                new ProducerRecord<>("topic_request", key, personDTO);
-        kafkaProducer.send(record);
+        producerRecord(key, personDTO);
     }
 
     public void updatePersonDTO(PersonDTO personDTO) {
-
-        System.out.println("update " + personDTO);
-
         String key = "updatePerson_" + personDTO.getUsername();
+        producerRecord(key, personDTO);
+    }
 
-        System.out.println("key " + key);
-
-
-        ProducerRecord<String, PersonDTO> record =
-                new ProducerRecord<>("topic_request", key, personDTO);
-        kafkaProducer.send(record);
+    public void deletePersonDTO(int id) {
+        String key = "deletePersonById_" + id;
+        PersonDTO personDTO = new PersonDTO.PersonDTOBuilder()
+                .setId(id)
+                .build();
+        System.out.println("build");
+        producerRecord(key, personDTO);
+        System.out.println("record");
     }
 
     private void producerRecord(String key, PersonDTO personDTO) {

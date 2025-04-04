@@ -62,7 +62,8 @@ public class FirstMicroserviceController {
     }
 
     @DeleteMapping("/delete")
-    public String delete(@ModelAttribute("person") PersonDTO personDTO) {
+    public String delete(@ModelAttribute("person") PersonModel personModel) {
+        personService.deletePersonDTO(personModel.getId());
         return "redirect:/auth/login";
     }
 
@@ -70,7 +71,6 @@ public class FirstMicroserviceController {
     public String update(Model model, @PathVariable("id") int id) {
         PersonDTO personDTO = personService.getPersonById(id).orElse(null);
         PersonModel personModel = modelMapper.map(personDTO, PersonModel.class);
-        System.out.println("get " + personModel);
         model.addAttribute("person", personModel);
         return "afterPage/update";
     }
@@ -78,13 +78,10 @@ public class FirstMicroserviceController {
     @PatchMapping("/update")
     public String update(@ModelAttribute("person") @Valid PersonModel personModel, BindingResult bindingResult) {
         personValidator.validate(personModel, bindingResult);
-        System.out.println(personModel);
         if (bindingResult.hasErrors()) {
-            System.out.println("if");
             return "afterPage/update";
         }
         PersonDTO personDTO = modelMapper.map(personModel, PersonDTO.class);
-        System.out.println("personDTO: " + personDTO.toString());
         personService.updatePersonDTO(personDTO);
         return "redirect:/auth/login";
     }
