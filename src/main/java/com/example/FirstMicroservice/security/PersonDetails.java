@@ -8,13 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class PersonDetails implements UserDetails {
-
     private final PersonDTO personDTO;
 
     public PersonDetails(PersonDTO personDTO) {
         this.personDTO = personDTO;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

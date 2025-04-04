@@ -1,7 +1,6 @@
 package com.example.FirstMicroservice.configuration;
 
 import com.example.FirstMicroservice.dto.PersonDTO;
-import com.example.FirstMicroservice.model.PersonModel;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -19,7 +18,6 @@ import java.util.Map;
 
 @Configuration
 public class KafkaConfiguration {
-
     private String bootstrapServers = "localhost:9092";
 
     @Bean

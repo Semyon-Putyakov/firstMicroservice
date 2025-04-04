@@ -4,12 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public class PersonDTO {
-
-
     private String username;
-
     private String password;
-
     private int id;
 
     public PersonDTO() {
@@ -46,16 +42,8 @@ public class PersonDTO {
     }
 
     public static class PersonDTOBuilder {
-
-        @NotEmpty(message = "Пустой логин")
-        @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
         private String username;
-
-
-        @NotEmpty(message = "Пустой пароль")
-        @Size(min = 3, max = 100, message = "Минимальное количество символов - 3, Максимальное количество символов - 100")
         private String password;
-
         private int id;
 
         public PersonDTOBuilder setUsername(String username) {
@@ -76,15 +64,5 @@ public class PersonDTO {
         public PersonDTO build() {
             return new PersonDTO(username, password, id);
         }
-
-    }
-
-    @Override
-    public String toString() {
-        return "PersonDTO{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", id=" + id +
-                '}';
     }
 }

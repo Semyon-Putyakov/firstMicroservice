@@ -1,24 +1,39 @@
 <!DOCTYPE html>
 <html lang="ru">
-</html>
-<body>
-    <h1>Регистрация</h1>
-    <form name th:action="@{/auth/registration}" th:method="POST" th:object="${person}">
-
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Регистрация</h2>
+    <form name th:action="@{/auth/registration}" th:method="POST" th:object="${person}" class="space-y-5">
         <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
-
-        <label for="username">Введите логин:</label>
-        <input type="text" th:field="*{username}" id="username">
-        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" />
-
-        <br/>
-
-        <label for="password">Введите пароль:</label>
-        <input type="text" th:field="*{password}" id="password">
-        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" />
-
-        <input type="submit" value="Зарегистрироваться">
+        <div>
+            <label for="username" class="block text-gray-700 font-medium mb-1">Логин</label>
+            <input type="text" th:field="*{username}" id="username"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <div th:if="${#fields.hasErrors('username')}"
+                 th:errors="*{username}"
+                 class="text-red-500 text-sm mt-1"></div>
+        </div>
+        <div>
+            <label for="password" class="block text-gray-700 font-medium mb-1">Пароль</label>
+            <input type="password" th:field="*{password}" id="password"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <div th:if="${#fields.hasErrors('password')}"
+                 th:errors="*{password}"
+                 class="text-red-500 text-sm mt-1"></div>
+        </div>
+        <div class="text-center">
+            <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-xl transition duration-200">
+                Зарегистрироваться
+            </button>
+        </div>
     </form>
+</div>
+
 </body>
 </html>
-

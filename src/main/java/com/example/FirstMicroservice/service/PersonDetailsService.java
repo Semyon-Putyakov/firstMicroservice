@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 public class PersonDetailsService implements UserDetailsService {
-
     private final PersonService personService;
 
     @Autowired
@@ -29,7 +28,5 @@ public class PersonDetailsService implements UserDetailsService {
         } else {
             return new PersonDetails(personDTO.get());
         }
-
-        // тут тоже поправить надо
-    } // тут поток новый надо создать
+    }
 }

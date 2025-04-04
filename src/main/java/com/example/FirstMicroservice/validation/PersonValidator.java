@@ -9,7 +9,6 @@ import org.springframework.validation.Validator;
 
 @Component
 public class PersonValidator implements Validator {
-
     private final PersonService personService;
 
     @Autowired
@@ -25,10 +24,9 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         PersonModel validatedPerson = (PersonModel) target;
-
         var personResponse = personService.getPersonDTO(validatedPerson.getUsername()).orElse(null);
         if (personResponse != null) {
-            errors.rejectValue("username", "Такой пользователь уже существует");
+            errors.rejectValue("username", null, "Такой пользователь уже существует");
         }
     }
 }

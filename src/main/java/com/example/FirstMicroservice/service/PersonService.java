@@ -16,7 +16,6 @@ public class PersonService {
     private final KafkaConsumer kafkaConsumer;
     private final KafkaProducer kafkaProducer;
 
-
     @Autowired
     public PersonService(KafkaConsumer kafkaConsumer, KafkaProducer kafkaProducer) {
         this.kafkaConsumer = kafkaConsumer;
@@ -65,9 +64,7 @@ public class PersonService {
         PersonDTO personDTO = new PersonDTO.PersonDTOBuilder()
                 .setId(id)
                 .build();
-        System.out.println("build");
         producerRecord(key, personDTO);
-        System.out.println("record");
     }
 
     private void producerRecord(String key, PersonDTO personDTO) {

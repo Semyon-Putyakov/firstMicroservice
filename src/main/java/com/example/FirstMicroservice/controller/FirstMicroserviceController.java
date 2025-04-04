@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/auth")
 public class FirstMicroserviceController {
-
     private final PersonService personService;
     private final PersonValidator personValidator;
     private final ModelMapper modelMapper;
