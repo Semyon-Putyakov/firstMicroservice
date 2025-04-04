@@ -6,11 +6,13 @@ FirstMicroservice
 
 ТЕХНОЛОГИИ
 ----------
-- Java
-- Spring Boot
+- Java 17
+- Spring Boot 3.4.4
 - Apache Kafka
 - Spring Security
+- Thymeleaf
 - Validation
+- ModelMapper 3.2.2
 - RESTful API
 
 СТРУКТУРА ПРОЕКТА
@@ -38,11 +40,13 @@ src/
 - Система безопасности и аутентификации
 - Валидация входящих данных
 - Работа с DTO для безопасной передачи данных
+- Интеграция с Thymeleaf для шаблонизации
+- Маппинг объектов с помощью ModelMapper
 
 ЗАПУСК ПРИЛОЖЕНИЯ
 ----------------
 1. Убедитесь, что у вас установлены:
-   - Java 17 или выше
+   - Java 17
    - Maven
    - Apache Kafka (если используется)
 
@@ -74,7 +78,3 @@ http://localhost:8080/swagger-ui.html
 -----------
 Для запуска тестов выполните:
 mvn test
-
-ЛИЦЕНЗИЯ
---------
-[Укажите тип лицензии] 

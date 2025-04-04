@@ -3,15 +3,16 @@ package com.example.FirstMicroservice.service;
 import com.example.FirstMicroservice.dto.PersonDTO;
 import com.example.FirstMicroservice.kafka.KafkaConsumer;
 import com.example.FirstMicroservice.kafka.KafkaProducer;
+import com.example.FirstMicroservice.util.PasswordEncoding;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -31,7 +32,6 @@ class PersonServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         personService = new PersonService(kafkaConsumer, kafkaProducer);
     }
 
@@ -87,8 +87,11 @@ class PersonServiceTest {
 
     @Test
     void createPersonDTO_EncryptsPasswordAndSendsToKafka() {
+        PasswordEncoder realEncoder = new BCryptPasswordEncoder();
+        new PasswordEncoding(realEncoder);
+
         PersonDTO personDTO = new PersonDTO.PersonDTOBuilder()
-                .setUsername("newUser")
+                .setUsername("testUser")
                 .setPassword("password123")
                 .build();
 
